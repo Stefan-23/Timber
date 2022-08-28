@@ -72,10 +72,10 @@ int main()
 
     spriteBee.setTexture(textureBee);
 
-    spriteBee.setPosition(0, 800);
+    spriteBee.setPosition(800, 800);
 
     //Is Bee moving
-    bool isBeeActive = false;
+    bool beeActive = false;
     //Bee moving speed
     float beeSpeed = 0.0f;
 
@@ -127,46 +127,90 @@ int main()
          ********************************************************
      */
 
-    window.clear();
 
-    /*
-         Drawing scene
-         ********************************************************
-     */
 
-    //Background
-    window.draw(spriteBackground);
 
-    //3 clouds
-    window.draw(spriteCloud1);
-    window.draw(spriteCloud2);
-    window.draw(spriteCloud3);
-    
-    //Tree
-    window.draw(spriteTree);
+     // Variables to control time itself
+    Clock clock;
 
-    //Bee
-    window.draw(spriteBee);
-
-    window.display();
-    
-    /*
-         Drawing scene
-         ********************************************************
-     */
-    
-    
-    
-    //Telling window to close with Esc button
     while (window.isOpen())
     {
+
+        /*
+        ****************************************
+        Handle the players input
+        ****************************************
+        */
+
         if (Keyboard::isKeyPressed(Keyboard::Escape))
         {
             window.close();
         }
+
+        /*
+        ****************************************
+        Update the scene
+        ****************************************
+        */
+        // Measure time
+        Time dt = clock.restart();
+
+        // Setup the bee
+        if (!beeActive)
+        {
+
+            // How fast is the bee
+            srand((int)time(0) * 10); //Time is 0 because that is current time on PC
+            beeSpeed = (rand() % 200) + 200;
+
+            // How high is the bee
+            srand((int)time(0) * 10);
+            float height = (rand() % 500) + 500;
+            spriteBee.setPosition(2000, height);
+            beeActive = true;
+
+        }
+        else
+            // Move the bee
+        {
+
+            spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()),spriteBee.getPosition().y);
+
+            // Has the bee reached the right hand edge of the screen?
+            if (spriteBee.getPosition().x < -100)
+            {
+                // Set it up ready to be a whole new cloud next frame
+                beeActive = false;
+            }
+        }
+        /*
+         Drawing scene
+         ********************************************************
+        */
+        //clear everything from previous scene
+        window.clear();
+
+     //Background
+        window.draw(spriteBackground);
+
+        //3 clouds
+        window.draw(spriteCloud1);
+        window.draw(spriteCloud2);
+        window.draw(spriteCloud3);
+
+        //Tree
+        window.draw(spriteTree);
+
+        //Bee
+        window.draw(spriteBee);
+
+        window.display();
+
+        /*
+             Drawing scene end
+             ********************************************************
+         */
     }
-    
-    
 
     
     return 0;

@@ -1,2 +1,4 @@
 ﻿  TImber.cpp
+C:\Users\Stefan-Sladja\Documents\Projects\TImber\TImber\TImber.cpp(164,39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\Stefan-Sladja\Documents\Projects\TImber\TImber\TImber.cpp(168,26): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   TImber.vcxproj -> C:\Users\Stefan-Sladja\Documents\Projects\TImber\x64\Debug\TImber.exe
