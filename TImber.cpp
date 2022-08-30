@@ -1,4 +1,6 @@
+#include <sstream>
 #include <SFML/Graphics.hpp>
+
 
 using namespace sf;
 
@@ -8,8 +10,6 @@ int main()
     VideoMode vm(1920, 1890);
     //Creating open window for game RenderWindow
     RenderWindow window(vm, "Timber!!", Style::Fullscreen);
-
-
     /*
         Background
         ********************************************************
@@ -134,6 +134,41 @@ int main()
     Clock clock;
     
     bool paused = true;
+
+    //Score
+    int score = 0;
+    //Message
+    Text messageText;
+    Text scoreText;
+    //Font
+    Font font;
+    font.loadFromFile("fonts/KOMIKAP_.ttf");
+    //Setting font for message
+    messageText.setFont(font);
+    scoreText.setFont(font);
+    //Adding text to message
+    messageText.setString("Press Enter to start");
+    scoreText.setString("Score = 0");
+    //Text size
+    messageText.setCharacterSize(75);
+    scoreText.setCharacterSize(100);
+    //Color
+    messageText.setFillColor(Color::White);
+    scoreText.setFillColor(Color::White);
+
+    FloatRect textRect = messageText.getLocalBounds();
+
+    messageText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+    messageText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+
+    scoreText.setPosition(20, 20);
+
+
+
+
+
+
+
 
 
     while (window.isOpen())
@@ -278,6 +313,8 @@ int main()
 
         //Bee
         window.draw(spriteBee);
+
+        //window.draw(messageText);
 
         window.display();
 
