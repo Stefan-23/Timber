@@ -1,2 +1,4 @@
 ﻿  Timber.cpp
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(136,39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(140,26): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Timber.vcxproj -> C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Debug\Timber.exe
