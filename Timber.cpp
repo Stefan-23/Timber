@@ -105,10 +105,7 @@ int main()
 
 
 
-    //window.clear();
- 
-
-
+    bool paused = true;
     while (window.isOpen())
     {
        
@@ -122,39 +119,116 @@ int main()
             window.close();
         }
 
+        if (Keyboard::isKeyPressed(Keyboard::Return))
+        {
+            paused = false;
+        }
+
         /*
             Updating scene
         */
 
-        //Time
-        Time dt = clock.restart();
-
-        //Giving bee life
-        if (!beeActive)
+        if (!paused)
         {
-            srand((int)time(0) * 10);
-            beeSpeed = (rand() % 200) + 200;
 
-            //Bee height
-            srand((int)time(0) * 10);
-            float height = (rand() % 500) + 500;
-            spriteBee.setPosition(2000, height);
-            beeActive = true;
-        }
-        else
-        {
-            spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), spriteBee.getPosition().y);
 
-            //Bee side check
-            if (spriteBee.getPosition().x < -100)
+
+            //Time
+            Time dt = clock.restart();
+
+            //Giving bee life
+            if (!beeActive)
             {
-                beeActive = false;
+                srand((int)time(0) * 10);
+                beeSpeed = (rand() % 200) + 200;
+
+                //Bee height
+                srand((int)time(0) * 10);
+                float height = (rand() % 500) + 500;
+                spriteBee.setPosition(2000, height);
+                beeActive = true;
             }
+            else
+            {
+                spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), spriteBee.getPosition().y);
+
+                //Bee side check
+                if (spriteBee.getPosition().x < -100)
+                {
+                    beeActive = false;
+                }
+            }
+
+            // Cloud movement
+
+            if (!cloud1Active)
+            {
+                //cloud speed
+                srand((int)time(0) * 10);
+                cloud1Speed = (rand() % 200);
+                //cloud height
+                srand((int)time(0) * 10);
+                float height = (rand() % 150);
+                spriteCloud1.setPosition(-200, height);
+                cloud1Active = 1;
+            }
+            else
+            {
+                spriteCloud1.setPosition(spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()), spriteCloud1.getPosition().y);
+
+                if (spriteCloud1.getPosition().x > 1920)
+                {
+                    cloud1Active = false;
+                }
+            }
+
+
+
+            if (!cloud2Active)
+            {
+                //cloud speed
+                srand((int)time(0) * 20);
+                cloud2Speed = (rand() % 200);
+                //cloud height
+                srand((int)time(0) * 20);
+                float height = (rand() % 300) - 150;
+                spriteCloud2.setPosition(-200, height);
+                cloud2Active = true;
+            }
+            else
+            {
+                spriteCloud2.setPosition(spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()), spriteCloud2.getPosition().y);
+
+                if (spriteCloud2.getPosition().x > 1920)
+                {
+                    cloud2Active = false;
+                }
+            }
+
+
+            if (!cloud3Active)
+            {
+                //cloud speed
+                srand((int)time(0) * 30);
+                cloud3Speed = (rand() % 200);
+                //cloud height
+                srand((int)time(0) * 30);
+                float height = (rand() % 450) - 150;
+                spriteCloud3.setPosition(-200, height);
+                cloud3Active = true;
+            }
+            else
+            {
+                spriteCloud3.setPosition(spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()), spriteCloud3.getPosition().y);
+
+                if (spriteCloud3.getPosition().x > 1920)
+                {
+                    cloud3Active = false;
+                }
+            }
+
+
         }
-
-       
-
-        
         // Drawing scene
 
 
