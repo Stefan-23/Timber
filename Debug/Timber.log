@@ -1,10 +1,6 @@
 ﻿  Timber.cpp
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(143,43): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(147,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(168,39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(171,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(191,39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(194,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(213,39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(216,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(134,43): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(138,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(158,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(162,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
   Timber.vcxproj -> C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Debug\Timber.exe
