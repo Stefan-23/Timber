@@ -1,10 +1,2 @@
-﻿  Timber.cpp
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(321,46): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(356,46): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(427,43): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(431,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(451,44): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(455,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(538,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\Timber.cpp(563,30): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+﻿  LINK : C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\x64\Debug\Timber.exe not found or not built by the last incremental link; performing full link
   Timber.vcxproj -> C:\Users\srbol\Documents\Visual Studio 2022\Projects\Timber\x64\Debug\Timber.exe
