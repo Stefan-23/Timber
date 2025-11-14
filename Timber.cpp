@@ -4,19 +4,13 @@
 #include <iostream>
 #include <sstream>
 #include <SFML/Audio.hpp>
+#include "include/PlayerActions.h"
 
 using namespace sf;
-
 void updateBranches(int seed);
-
 const int NUM_BRANCHES = 7;
 Sprite branches[NUM_BRANCHES];
-
-// Where is the player/branch? 
-// Left or Right
-enum class side { LEFT, RIGHT, NONE };
 side branchPositions[NUM_BRANCHES];
-
 
 int main()
 {
@@ -313,71 +307,40 @@ int main()
         {
             if (Keyboard::isKeyPressed(Keyboard::Right))
             {
-                //Player right side
-                playerSide = side::RIGHT;
-                spritePlayer2.setPosition(1100, 850);
-                score++;
-                //Time increase
-                timeRemaining += (2 / score) + .15;
-                spriteHit.setPosition(HIT_POSITION_RIGHT, spriteHit.getPosition().y);
-                updateBranches(score);
-                //Log moving
-                spriteLog.setPosition(810, 900);
-                logSpeedX = -5000;
-                logActive = true;
-                acceptInput = false;
-                // Play a chop sound
-                chop.play();
-
-                int randFuncIdx = std::rand() % 4;
-                switch (randFuncIdx) {
-                case 0:
-                    chop2.play();
-                    break;
-                case 1:
-                    chop3.play();
-                    break;
-                case 2:
-                    chop4.play();
-                    break;
-                default:
-                    break;
-                }
-                // chop.play();
+                handleChopRight(
+                    playerSide,
+                    score,
+                    timeRemaining,
+                    acceptInput,
+                    spritePlayer2,
+                    spriteHit,
+                    spriteLog,
+                    logActive,
+                    logSpeedX,
+                    chop,
+                    chop2,
+                    chop3,
+                    chop4
+                );
             }
 
-            // Player left side
             if (Keyboard::isKeyPressed(Keyboard::Left))
             {
-                //Player right side
-                playerSide = side::LEFT;
-                score++;
-                //Time increase
-                timeRemaining += (2 / score) + .15;
-                spriteHit2.setPosition(HIT_POSITION_LEFT, spriteHit2.getPosition().y);
-                spritePlayer.setPosition(650, 850);
-                updateBranches(score);
-                //Log moving
-                spriteLog.setPosition(810, 900);
-                logSpeedX = 5000;
-                logActive = true;
-                acceptInput = false;
-                chop.play();
-
-                int randFuncIdx = std::rand() % 4;
-                switch (randFuncIdx) {
-                case 0:
-                    chop2.play();
-                    break;
-                case 1:
-                    chop3.play();
-                    break;
-                case 2:
-                    chop4.play();
-                    break;
-                default:
-                    break;
-                }
+                handleChopLeft(
+                    playerSide,
+                    score,
+                    timeRemaining,
+                    acceptInput,
+                    spritePlayer,
+                    spriteHit2,
+                    spriteLog,
+                    logActive,
+                    logSpeedX,
+                    chop,
+                    chop2,
+                    chop3,
+                    chop4
+                );
             }
             int streak[4] = { 10, 20, 50, 100 };
             for (int x = 0; x < 4; x++)
@@ -389,7 +352,7 @@ int main()
                 if (event.type == Event::KeyReleased && !paused)
                 {
                     spriteStreak.setPosition(-2000, -2000);
-                
+
                 }
 
             }
