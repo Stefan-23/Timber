@@ -2,10 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 
-enum class side { LEFT, RIGHT, NONE };
+enum class PlayerSide { LEFT, RIGHT, NONE };
 
 void handleChopRight(
-    side& playerSide,
+    PlayerSide& playerSide,
     int& score,
     float& timeRemaining,
     bool& acceptInput,
@@ -21,7 +21,7 @@ void handleChopRight(
 );
 
 void handleChopLeft(
-    side& playerSide,
+    PlayerSide& playerSide,
     int& score,
     float& timeRemaining,
     bool& acceptInput,

@@ -1,4 +1,4 @@
-#include "../include/PlayerActions.h"
+#include "PlayerActions.h"
 #include <cstdlib>
 
 void updateBranches(int seed);
