@@ -1,91 +1,50 @@
 #include "../include/PlayerActions.h"
 #include <cstdlib>
 
-void updateBranches(int seed);
+const float HIT_POSITION_LEFT = 700.0f;
+const float HIT_POSITION_RIGHT = 1075.0f;
 
-
-const float HIT_POSITION_LEFT = 700.f;
-const float HIT_POSITION_RIGHT = 1075.f;
-
-void handleChopRight(
-    side& playerSide,
-    int& score,
-    float& timeRemaining,
-    bool& acceptInput,
-    sf::Sprite& spritePlayerRight,
-    sf::Sprite& spriteHitRight,
-    sf::Sprite& spriteLog,
-    bool& logActive,
-    float& logSpeedX,
-    sf::Sound& chop,
-    sf::Sound& chop2,
-    sf::Sound& chop3,
-    sf::Sound& chop4
-)
+void handleInput(side playerDirection)
 {
-    playerSide = side::RIGHT;
-    spritePlayerRight.setPosition(1100, 850);
+    if (!acceptInput) return;
+
+    playerSide = playerDirection;
     score++;
-    timeRemaining += (2.f / score) + .15f;
 
-    spriteHitRight.setPosition(HIT_POSITION_RIGHT, spriteHitRight.getPosition().y);
+    // Increase time
+    timeRemaining += (2.0f / score) + 0.15f;
 
+    // Update player sprite and hit sprite based on side
+    if (playerDirection == side::RIGHT)
+    {
+        spritePlayer2.setPosition(1100, 850);
+        spriteHit.setPosition(HIT_POSITION_RIGHT, spriteHit.getPosition().y);
+        logSpeedX = -5000;
+    }
+    else // LEFT
+    {
+        spritePlayer.setPosition(650, 850);
+        spriteHit2.setPosition(HIT_POSITION_LEFT, spriteHit2.getPosition().y);
+        logSpeedX = 5000;
+    }
+
+    // Update branches
     updateBranches(score);
 
+    // Start log movement
     spriteLog.setPosition(810, 900);
-    logSpeedX = -5000.f;
     logActive = true;
     acceptInput = false;
 
+    // Sound
     chop.play();
-
     int randFuncIdx = std::rand() % 4;
-    switch (randFuncIdx) {
+
+    switch (randFuncIdx)
+    {
     case 0: chop2.play(); break;
     case 1: chop3.play(); break;
     case 2: chop4.play(); break;
     default: break;
     }
-}
-
-void handleChopLeft(
-    side& playerSide,
-    int& score,
-    float& timeRemaining,
-    bool& acceptInput,
-    sf::Sprite& spritePlayerLeft,
-    sf::Sprite& spriteHitLeft,
-    sf::Sprite& spriteLog,
-    bool& logActive,
-    float& logSpeedX,
-    sf::Sound& chop,
-    sf::Sound& chop2,
-    sf::Sound& chop3,
-    sf::Sound& chop4
-)
-{
-    playerSide = side::LEFT;
-    score++;
-    timeRemaining += (2.f / score) + .15f;
-
-    spriteHitLeft.setPosition(HIT_POSITION_LEFT, spriteHitLeft.getPosition().y);
-    spritePlayerLeft.setPosition(650, 850);
-
-    updateBranches(score);
-
-    spriteLog.setPosition(810, 900);
-    logSpeedX = 5000.f;
-    logActive = true;
-    acceptInput = false;
-
-    chop.play();
-
-    int randFuncIdx = std::rand() % 4;
-    switch (randFuncIdx) {
-    case 0: chop2.play(); break;
-    case 1: chop3.play(); break;
-    case 2: chop4.play(); break;
-    default: break;
-    }
-
 }

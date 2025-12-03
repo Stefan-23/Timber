@@ -1,19 +1,43 @@
-//Inclucde C++ Libraries
-#pragma once
 #include "SFML/Graphics.hpp"
-#include <iostream>
-#include <sstream>
-#include <SFML/Audio.hpp>
+#include "SFML/Audio.hpp"
 #include "include/PlayerActions.h"
+#include <sstream>
+#include <cstdlib>
+#include <ctime>
 
 using namespace sf;
-void updateBranches(int seed);
+
 const int NUM_BRANCHES = 7;
+
+// Branch sprites and positions
 Sprite branches[NUM_BRANCHES];
-side branchPositions[NUM_BRANCHES];
+side   branchPositions[NUM_BRANCHES];
+
+// Globals 
+side  playerSide = side::LEFT;
+int   score = 0;
+float timeRemaining = 6.0f;
+bool  acceptInput = false;
+bool  logActive = false;
+float logSpeedX = 0.0f;
+
+Sprite spritePlayer;
+Sprite spritePlayer2;
+Sprite spriteHit;
+Sprite spriteHit2;
+Sprite spriteLog;
+
+Sound chop;
+Sound chop2;
+Sound chop3;
+Sound chop4;
+
+// 
+void updateBranches(int seed);
 
 int main()
 {
+    
     VideoMode vm(1920, 1080);
     RenderWindow window(vm, "JCVD Training!!", Style::Fullscreen);
     //Clock
@@ -31,7 +55,7 @@ int main()
     float timeBarWidthPerSecond = timeBarStartWidth / timeRemaining;
 
     //********** Background ********** 
-    
+
     //Creating background for game
     Texture textureBackground;
     //Loading background
@@ -41,7 +65,7 @@ int main()
     //Connecting Spite
     spriteBackground.setTexture(textureBackground);
     //Setting position for Sprite
-    spriteBackground.setPosition(0,0);
+    spriteBackground.setPosition(0, 0);
 
     //********** Background **********
 
@@ -58,7 +82,7 @@ int main()
     textureBee.loadFromFile("graphics/bee.png");
     Sprite spriteBee;
     spriteBee.setTexture(textureBee);
-    spriteBee.setPosition(0,800);
+    spriteBee.setPosition(0, 800);
     //Is bee moving
     bool beeActive = false;
     float beeSpeed = 0.0f;
@@ -72,7 +96,7 @@ int main()
     bool beeActive1 = false;
     float beeSpeed1 = 0.0f;
     //********** Bee **********
-    
+
     //********** Cloud **********
     Texture textureCloud;
     textureCloud.loadFromFile("graphics/cloud.png");
@@ -98,9 +122,7 @@ int main()
     //Cloud position
     spriteCloud1.setPosition(0, 0);
 
-    //********** Cloud **********
-    bool paused = true;
-    int score = 0;
+    //********** Cloud *********
     sf::Text messageText;
     sf::Text scoreText;
 
@@ -131,485 +153,303 @@ int main()
         // We can then spin it round without changing its position
         branches[i].setOrigin(220, 20);
     }
-    //Player
-    Texture texturePlayer;
-    texturePlayer.loadFromFile("graphics/JCVD1.gif");
-    Sprite spritePlayer;
-    spritePlayer.setTexture(texturePlayer);
-    spritePlayer.setPosition(720, 850);
 
-    //Player
-    Texture texturePlayer2;
-    texturePlayer2.loadFromFile("graphics/JCVD2.gif");
-    Sprite spritePlayer2;
-    spritePlayer2.setTexture(texturePlayer2);
-    spritePlayer2.setPosition(720, 850);
+    // Player
+    Texture texturePlayerLeft;
+    Texture texturePlayerRight;
+    texturePlayerLeft.loadFromFile("graphics/JCVD1.gif");
+    texturePlayerRight.loadFromFile("graphics/JCVD2.gif");
+    spritePlayer.setTexture(texturePlayerLeft);
+    spritePlayer2.setTexture(texturePlayerRight);
+    spritePlayer.setPosition(650, 850);
+    spritePlayer2.setPosition(1100, 850);
+    playerSide = side::LEFT;
 
-    //starting side
-    side playerSide = side::LEFT;
-
-    //RIP
+    // RIP / hits / streak
     Texture textureRIP;
-    textureRIP.loadFromFile("graphics/rip.png");
-    Sprite spriteRIP;
-    spriteRIP.setTexture(textureRIP);
-    spriteRIP.setPosition(650, 900);
-    //Hit
-    Texture textureHit;
-    textureHit.loadFromFile("graphics/jcvdLft1.png");
-    Sprite spriteHit;
-    spriteHit.setTexture(textureHit);
-    spriteHit.setPosition(1100, 850);
-
-    Texture textureHit2;
-    textureHit2.loadFromFile("graphics/jcvdLft.png");
-    Sprite spriteHit2;
-    spriteHit2.setTexture(textureHit2);
-    spriteHit2.setPosition(650, 850);
-
-
+    Texture textureHitLeft;
+    Texture textureHitRight;
     Texture textureStreak;
+    textureRIP.loadFromFile("graphics/rip.png");
+    textureHitLeft.loadFromFile("graphics/jcvdLft.png");
+    textureHitRight.loadFromFile("graphics/jcvdLft1.png");
     textureStreak.loadFromFile("graphics/RIP.jpg");
-    Sprite spriteStreak;
-    spriteStreak.setTexture(textureStreak);
-    spriteStreak.setPosition(650, 850);
 
-    const float HIT_POSITION_LEFT = 700;
-    const float HIT_POSITION_RIGHT = 1075;
+    Sprite spriteRIP(textureRIP);
+    spriteHit2.setTexture(textureHitLeft);
+    spriteHit.setTexture(textureHitRight);
+    Sprite spriteStreak(textureStreak);
 
+    spriteRIP.setPosition(650, 900);
+    spriteHit.setPosition(2000, 850);
+    spriteHit2.setPosition(2000, 850);
+    spriteStreak.setPosition(-2000, -2000);
+
+    // Log
     Texture textureLog;
     textureLog.loadFromFile("graphics/log.png");
-    Sprite spriteLog;
     spriteLog.setTexture(textureLog);
     spriteLog.setPosition(810, 900);
-    bool logActive = false;
-    float logSpeedX = 1000;
-    float logSpeedY = -1500;
-    //control input of player
-    bool acceptInput = false;
+    logActive = false;
+    logSpeedX = 1000.0f;
+    float logSpeedY = -1500.0f;
 
-    // Prepare the sound
+    // Sounds
     SoundBuffer menuBuffer;
-    menuBuffer.loadFromFile("sound/menu.wav");
-    Sound menu;
-    menu.setBuffer(menuBuffer);
-
-    // Prepare the sound
     SoundBuffer chopBuffer;
-    chopBuffer.loadFromFile("sound/chop.wav");
-    Sound chop;
-    chop.setBuffer(chopBuffer);
-
-    // Prepare the sound
-    SoundBuffer chop1Buffer;
-    chop1Buffer.loadFromFile("sound/chop1.wav");
-    Sound chop1;
-    chop1.setBuffer(chop1Buffer);
-
-    // Prepare the sound
     SoundBuffer chop2Buffer;
-    chop2Buffer.loadFromFile("sound/chop2.wav");
-    Sound chop2;
-    chop2.setBuffer(chop2Buffer);
-
-    // Prepare the sound
     SoundBuffer chop3Buffer;
-    chop3Buffer.loadFromFile("sound/chop3.wav");
-    Sound chop3;
-    chop3.setBuffer(chop3Buffer);
-
-    // Prepare the sound
     SoundBuffer chop4Buffer;
-    chop4Buffer.loadFromFile("sound/chop4.wav");
-    Sound chop4;
-    chop4.setBuffer(chop4Buffer);
-
     SoundBuffer deathBuffer;
-    deathBuffer.loadFromFile("sound/death.wav");
-    Sound death;
-    death.setBuffer(deathBuffer);
-
-    // Out of time
     SoundBuffer ootBuffer;
+
+    menuBuffer.loadFromFile("sound/menu.wav");
+    chopBuffer.loadFromFile("sound/chop.wav");
+    chop2Buffer.loadFromFile("sound/chop2.wav");
+    chop3Buffer.loadFromFile("sound/chop3.wav");
+    chop4Buffer.loadFromFile("sound/chop4.wav");
+    deathBuffer.loadFromFile("sound/death.wav");
     ootBuffer.loadFromFile("sound/out_of_time.wav");
-    Sound outOfTime;
-    outOfTime.setBuffer(ootBuffer);
+
+    Sound menu(menuBuffer);
+    chop.setBuffer(chopBuffer);
+    chop2.setBuffer(chop2Buffer);
+    chop3.setBuffer(chop3Buffer);
+    chop4.setBuffer(chop4Buffer);
+    Sound death(deathBuffer);
+    Sound outOfTime(ootBuffer);
+
+    bool paused = true;
+    score = 0;
+
+    int streak[4] = { 10, 20, 50, 100 };
 
     while (window.isOpen())
     {
-
         Event event;
         while (window.pollEvent(event))
         {
+            if (event.type == Event::Closed)
+                window.close();
 
             if (event.type == Event::KeyReleased && !paused)
             {
-                if (event.key.scancode == sf::Keyboard::Scan::Enter)
-                {
-                    acceptInput = true;
-                }
-                if (event.key.scancode == sf::Keyboard::Scan::Left)
-                {
-                    acceptInput = true;
-                }
-                if (event.key.scancode == sf::Keyboard::Scan::Right)
-                {
-                    acceptInput = true;
-                }
-                // Listen for key presses again
-                //acceptInput = true;
-
-                // hide the hit image
-                spriteHit.setPosition(2000,
-                    spriteHit.getPosition().y);
-                // hide the hit image
-                spriteHit2.setPosition(2000,
-                    spriteHit2.getPosition().y);
-
-                
+                acceptInput = true;
+                spriteHit.setPosition(2000, spriteHit.getPosition().y);
+                spriteHit2.setPosition(2000, spriteHit2.getPosition().y);
             }
-            
-          
         }
-        /*
-            Player input
-        */
-        messageText.setFillColor(Color::White);
-        scoreText.setFillColor(Color::White);
+
+        // HUD positions
         FloatRect textRect = messageText.getLocalBounds();
-        messageText.setOrigin(textRect.left + textRect.width / 2.0f, textRect.top + textRect.height / 2.0f);
+        messageText.setOrigin(
+            textRect.left + textRect.width / 2.0f,
+            textRect.top + textRect.height / 2.0f
+        );
         messageText.setPosition(1920 / 2.0f, 1080 / 2.0f);
         scoreText.setPosition(20, 20);
 
-       
+        // General input
         if (Keyboard::isKeyPressed(Keyboard::Escape))
-        {
             window.close();
-        }
+
         if (Keyboard::isKeyPressed(Keyboard::Return))
         {
             menu.play();
             score = 0;
-            timeRemaining = 6;
+            timeRemaining = 6.0f;
             paused = false;
-            //Hide branches
-            for (int i = 1; i < NUM_BRANCHES; i++)
-            {
+
+            for (int i = 0; i < NUM_BRANCHES; ++i)
                 branchPositions[i] = side::NONE;
-            }
-            //Hide RIP
+
             spriteRIP.setPosition(675, 2000);
-            //Player position
             spritePlayer.setPosition(650, 850);
+            spritePlayer2.setPosition(1100, 850);
+            playerSide = side::LEFT;
             acceptInput = true;
         }
+
+        // Player input (left / right)
         if (acceptInput)
         {
             if (Keyboard::isKeyPressed(Keyboard::Right))
-            {
-                handleChopRight(
-                    playerSide,
-                    score,
-                    timeRemaining,
-                    acceptInput,
-                    spritePlayer2,
-                    spriteHit,
-                    spriteLog,
-                    logActive,
-                    logSpeedX,
-                    chop,
-                    chop2,
-                    chop3,
-                    chop4
-                );
-            }
+                handleInput(side::RIGHT);
+            else if (Keyboard::isKeyPressed(Keyboard::Left))
+                handleInput(side::LEFT);
 
-            if (Keyboard::isKeyPressed(Keyboard::Left))
-            {
-                handleChopLeft(
-                    playerSide,
-                    score,
-                    timeRemaining,
-                    acceptInput,
-                    spritePlayer,
-                    spriteHit2,
-                    spriteLog,
-                    logActive,
-                    logSpeedX,
-                    chop,
-                    chop2,
-                    chop3,
-                    chop4
-                );
-            }
-            int streak[4] = { 10, 20, 50, 100 };
-            for (int x = 0; x < 4; x++)
-            {
-                if (score == streak[x])
-                {
-                    spriteStreak.setPosition(1500, 20);
-                }
-                if (event.type == Event::KeyReleased && !paused)
-                {
-                    spriteStreak.setPosition(-2000, -2000);
+            // Streak
+            bool showStreak = false;
+            for (int s : streak)
+                if (score == s)
+                    showStreak = true;
 
-                }
-
-            }
+            spriteStreak.setPosition(
+                showStreak ? Vector2f(1500.0f, 20.0f)
+                : Vector2f(-2000.0f, -2000.0f)
+            );
         }
-          
-        /*
-            Updating scene
-        */
+
+        // Update 
         if (!paused)
         {
-            //Time
             Time dt = clock.restart();
+            float dtSec = dt.asSeconds();
 
-            timeRemaining -= dt.asSeconds();
-            timeBar.setSize(Vector2f(timeBarWidthPerSecond * timeRemaining, timeBarHeight));
+            timeRemaining -= dtSec;
+            timeBar.setSize(Vector2f(
+                timeBarWidthPerSecond * timeRemaining,
+                timeBarHeight
+            ));
 
             if (timeRemaining <= 0.0f)
             {
                 paused = true;
-
                 messageText.setString("Out of time");
-
-                FloatRect textRect = messageText.getLocalBounds();
-                messageText.setOrigin(textRect.left +
-                    textRect.width / 2.0f,
-                    textRect.top +
-                    textRect.height / 2.0f);
-                messageText.setPosition(1920 / 2.0f, 1080 / 2.0f);
+                outOfTime.play();
             }
 
-            //Giving bee life
+            // Bee 1
             if (!beeActive)
             {
-                srand((int)time(0) * 10);
-                beeSpeed = (rand() % 200) + 200;
-
-                //Bee height
-                srand((int)time(0) * 10);
-                float height = (rand() % 500) + 500;
+                beeSpeed = (std::rand() % 200) + 200;
+                float height = (std::rand() % 500) + 500;
                 spriteBee.setPosition(2000, height);
                 beeActive = true;
             }
             else
             {
-                spriteBee.setPosition(spriteBee.getPosition().x - (beeSpeed * dt.asSeconds()), spriteBee.getPosition().y);
-
-                //Bee side check
+                spriteBee.move(-beeSpeed * dtSec, 0);
                 if (spriteBee.getPosition().x < -100)
-                {
                     beeActive = false;
-                }
             }
 
-
-            //Second kunai movement
+            // Bee 2
             if (!beeActive1)
             {
-                srand((int)time(0) * 10);
-                beeSpeed1 = (rand() % 250) + 200;
-
-                //Bee height
-                srand((int)time(0) * 10);
-                float height = (rand() % 550) + 500;
+                beeSpeed1 = (std::rand() % 250) + 200;
+                float height = (std::rand() % 550) + 500;
                 spriteBee1.setPosition(2000, height);
                 beeActive1 = true;
             }
             else
             {
-                spriteBee1.setPosition(spriteBee1.getPosition().x - (beeSpeed1 * dt.asSeconds()), spriteBee1.getPosition().y);
-
-                //Bee side check
+                spriteBee1.move(-beeSpeed1 * dtSec, 0);
                 if (spriteBee1.getPosition().x < -100)
-                {
                     beeActive1 = false;
-                }
             }
-            // Cloud movement
+
+            // Clouds
             if (!cloud1Active)
             {
-                //cloud speed
-                srand((int)time(0) * 10);
                 cloud1Speed = 150;
-                //cloud height
-                srand((int)time(0) * 10);
-                float height = 800;
-                spriteCloud1.setPosition(-200, height);
-                cloud1Active = 1;
+                spriteCloud1.setPosition(-200, 800);
+                cloud1Active = true;
             }
             else
             {
-                spriteCloud1.setPosition(spriteCloud1.getPosition().x + (cloud1Speed * dt.asSeconds()), spriteCloud1.getPosition().y);
-
+                spriteCloud1.move(cloud1Speed * dtSec, 0);
                 if (spriteCloud1.getPosition().x > 1920)
-                {
                     cloud1Active = false;
-                }
             }
+
             if (!cloud2Active)
             {
-                //cloud speed
-                srand((int)time(0) * 20);
                 cloud2Speed = 200;
-                //cloud height
-                srand((int)time(0) * 20);
-                float height = 850;
-                spriteCloud2.setPosition(-200, height);
+                spriteCloud2.setPosition(-200, 850);
                 cloud2Active = true;
             }
             else
             {
-                spriteCloud2.setPosition(spriteCloud2.getPosition().x + (cloud2Speed * dt.asSeconds()), spriteCloud2.getPosition().y);
-
+                spriteCloud2.move(cloud2Speed * dtSec, 0);
                 if (spriteCloud2.getPosition().x > 1920)
-                {
                     cloud2Active = false;
-                }
             }
+
             if (!cloud3Active)
             {
-                //cloud speed
-                srand((int)time(0) * 30);
                 cloud3Speed = 300;
-                //cloud height
-                srand((int)time(0) * 30);
-                float height = 900;
-                spriteCloud3.setPosition(-200, height);
+                spriteCloud3.setPosition(-200, 900);
                 cloud3Active = true;
             }
             else
             {
-                spriteCloud3.setPosition(spriteCloud3.getPosition().x + (cloud3Speed * dt.asSeconds()), spriteCloud3.getPosition().y);
-
+                spriteCloud3.move(cloud3Speed * dtSec, 0);
                 if (spriteCloud3.getPosition().x > 1920)
-                {
                     cloud3Active = false;
-                }
-
-                //Updating score text
-                std::stringstream ss;
-                ss << "Score = " << score;
-                scoreText.setString(ss.str());
             }
-            for (int i = 0; i < NUM_BRANCHES; i++)
-            {
 
-                float height = i * 150;
+            // Score text
+            std::stringstream ss;
+            ss << "Score = " << score;
+            scoreText.setString(ss.str());
+
+            // Branch sprites
+            for (int i = 0; i < NUM_BRANCHES; ++i)
+            {
+                float height = i * 150.0f;
 
                 if (branchPositions[i] == side::LEFT)
                 {
-                    // Move the sprite to the left side
-                    branches[i].setPosition(600, height);
-                    // Flip the sprite round the other way
-                    branches[i].setRotation(180);
+                    branches[i].setPosition(610.0f, height);
+                    branches[i].setRotation(180.0f);
                 }
                 else if (branchPositions[i] == side::RIGHT)
                 {
-                    // Move the sprite to the right side
-                    branches[i].setPosition(1330, height);
-                    // Set the sprite rotation to normal
-                    branches[i].setRotation(0);
+                    branches[i].setPosition(1330.0f, height);
+                    branches[i].setRotation(0.0f);
+                }
+                else
+                {
+                    branches[i].setPosition(3000.0f, height);
+                }
+            }
 
-                }
-                else
-                {
-                    // Hide the branch
-                    branches[i].setPosition(3000, height);
-                }
-            }
-            for (int i = 0; i < NUM_BRANCHES; i++)
-            {
-                float height = i * 150;
-                if (branchPositions[i] == side::LEFT)
-                {
-                    //Sprite goes to the left side
-                    branches[i].setPosition(610, height);
-                    //Mirror sprite
-                    branches[i].setRotation(180);
-                }
-                else if (branchPositions[i] == side::RIGHT)
-                {
-                    //Sprite goes to the right side
-                    branches[i].setPosition(1330, height);
-                    //Default value
-                    branches[i].setRotation(0);
-                }
-                else
-                {
-                    //Hide branch
-                    branches[i].setPosition(3000, height);
-                }
-            }
+            // Log movement
             if (logActive)
             {
-                spriteLog.setPosition(spriteLog.getPosition().x + (logSpeedX * dt.asSeconds()), spriteLog.getPosition().y + (logSpeedY * dt.asSeconds()));
-                //Is log on the edge
-                if(spriteLog.getPosition().x < -100 || spriteLog.getPosition().x > 2000)
+                spriteLog.move(logSpeedX * dtSec, logSpeedY * dtSec);
+                if (spriteLog.getPosition().x < -100 ||
+                    spriteLog.getPosition().x > 2000)
                 {
-                    //Make log in next scene
                     logActive = false;
                     spriteLog.setPosition(810, 900);
                 }
-         
             }
-            // has the player been squished by a branch?
-			if (branchPositions[6] == playerSide)
-			{
-				// death
-				paused = true;
-				acceptInput = false;
 
-				// Draw the gravestone
-				spriteRIP.setPosition(650, 900);
+            // Check if player is hit by branch
+            if (branchPositions[6] == playerSide)
+            {
+                paused = true;
+                acceptInput = false;
 
-				// hide the player
-				spritePlayer.setPosition(2000, 660);
+                spriteRIP.setPosition(650, 900);
+                spritePlayer.setPosition(2000, 660);
 
+                messageText.setString("Steven Seagal WINS!!");
+                death.play();
+            }
+        }
 
-				// Change the text of the message
-				messageText.setString("Steven Seagal WINS!!");
-
-				// Center it on the screen
-				FloatRect textRect = messageText.getLocalBounds();
-
-				messageText.setOrigin(textRect.left +
-					textRect.width / 2.0f,
-					textRect.top + textRect.height / 2.0f);
-
-				messageText.setPosition(1920 / 2.0f,
-					1080 / 2.0f);
-
-				// Play the death sound
-				death.play();
-
-
-			}
-
-    }
-
-        // Drawing scene
-        
+        // Draw scene
         window.clear();
         window.draw(spriteBackground);
         window.draw(spriteTree);
-        for (int i = 0; i < NUM_BRANCHES; i++) {
+
+        for (int i = 0; i < NUM_BRANCHES; ++i)
             window.draw(branches[i]);
-        }
+
         if (event.type == Event::KeyReleased && !paused)
         {
             if (event.key.scancode == sf::Keyboard::Scan::Left)
             {
                 window.draw(spritePlayer);
-            }  
+            }
             if (event.key.scancode == sf::Keyboard::Scan::Right)
             {
                 window.draw(spritePlayer2);
             }
-          
+
             //window.draw(spritePlayer);
             //window.draw(spritePlayer2);
         }
@@ -617,12 +457,12 @@ int main()
         {
             acceptInput = false;
         }
-        
+
         if (event.key.scancode == sf::Keyboard::Scan::Enter)
         {
             window.draw(spritePlayer);
         }
-        //window.draw(spritePlayer);
+
         window.draw(spriteHit);
         window.draw(spriteHit2);
         window.draw(spriteLog);
@@ -636,49 +476,28 @@ int main()
         window.draw(timeBar);
         window.draw(spriteStreak);
 
-
-   
-        
-       
         if (paused)
-        {
             window.draw(messageText);
-        }
 
-        //Removing everything from previous scene
-        //Showing everything we created
         window.display();
-
     }
-    return 0;
 
+    return 0;
 }
-// Function definition
+
+// Moves branches down and spawns new one at the top
 void updateBranches(int seed)
 {
-    // Move all the branches down one place
-    for (int j = NUM_BRANCHES - 1; j > 0; j--) {
+    for (int j = NUM_BRANCHES - 1; j > 0; --j)
         branchPositions[j] = branchPositions[j - 1];
+
+    std::srand(static_cast<unsigned>(std::time(nullptr)) + seed);
+    int r = std::rand() % 5;
+
+    switch (r)
+    {
+    case 0: branchPositions[0] = side::LEFT;  break;
+    case 1: branchPositions[0] = side::RIGHT; break;
+    default: branchPositions[0] = side::NONE; break;
     }
-
-    // Spawn a new branch at position 0
-    // LEFT, RIGHT or NONE
-    srand((int)time(0) + seed);
-    int r = (rand() % 5);
-
-    switch (r) {
-    case 0:
-        branchPositions[0] = side::LEFT;
-        break;
-
-    case 1:
-        branchPositions[0] = side::RIGHT;
-        break;
-
-    default:
-        branchPositions[0] = side::NONE;
-        break;
-    }
-
-
 }

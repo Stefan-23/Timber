@@ -1,37 +1,27 @@
 #pragma once
-#include <SFML/Graphics.hpp>
-#include <SFML/Audio.hpp>
+#include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 
 enum class side { LEFT, RIGHT, NONE };
 
-void handleChopRight(
-    side& playerSide,
-    int& score,
-    float& timeRemaining,
-    bool& acceptInput,
-    sf::Sprite& spritePlayerRight,
-    sf::Sprite& spriteHitRight,
-    sf::Sprite& spriteLog,
-    bool& logActive,
-    float& logSpeedX,
-    sf::Sound& chop,
-    sf::Sound& chop2,
-    sf::Sound& chop3,
-    sf::Sound& chop4
-);
+// External variables
+extern side  playerSide;
+extern int   score;
+extern float timeRemaining;
+extern bool  acceptInput;
+extern bool  logActive;
+extern float logSpeedX;
 
-void handleChopLeft(
-    side& playerSide,
-    int& score,
-    float& timeRemaining,
-    bool& acceptInput,
-    sf::Sprite& spritePlayerLeft,
-    sf::Sprite& spriteHitLeft,
-    sf::Sprite& spriteLog,
-    bool& logActive,
-    float& logSpeedX,
-    sf::Sound& chop,
-    sf::Sound& chop2,
-    sf::Sound& chop3,
-    sf::Sound& chop4
-);
+extern sf::Sprite spritePlayer;
+extern sf::Sprite spritePlayer2;
+extern sf::Sprite spriteHit;
+extern sf::Sprite spriteHit2;
+extern sf::Sprite spriteLog;
+
+extern sf::Sound chop;
+extern sf::Sound chop2;
+extern sf::Sound chop3;
+extern sf::Sound chop4;
+
+void updateBranches(int seed);
+void handleInput(side playerDirection);

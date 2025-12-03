@@ -143,6 +143,9 @@
     <ClCompile Include="src\PlayerActions.cpp" />
     <ClCompile Include="Timber.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\PlayerActions.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
